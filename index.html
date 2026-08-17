@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Rincón de Ilie</title>
+<style>
+  :root{
+    --navy:#1f2733;
+    --navy-dark:#151b24;
+    --cream:#f4ede1;
+    --cream-2:#ece2d0;
+    --stone:#8a8477;
+    --gold:#c8a24a;
+    --terracotta:#b5502e;
+    --text:#2a2620;
+    --white:#fffdf9;
+    --line:#e2d8c4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Georgia', 'Times New Roman', serif;
+    background:var(--cream);
+    color:var(--text);
+    line-height:1.6;
+  }
+  h1,h2,h3{font-family:'Georgia', serif; letter-spacing:.3px;}
+  a{color:inherit;}
+  img{max-width:100%; display:block;}
+  .container{max-width:1000px; margin:0 auto; padding:0 20px;}
+
+  /* Top bar / language switcher */
+  .topbar{
+    background:var(--navy-dark);
+    color:var(--cream);
+    padding:8px 0;
+    font-size:.85rem;
+  }
+  .topbar .container{display:flex; justify-content:flex-end; gap:6px;}
+  .lang-btn{
+    background:none;
+    border:1px solid rgba(244,237,225,.35);
+    color:var(--cream);
+    padding:4px 12px;
+    border-radius:3px;
+    cursor:pointer;
+    font-size:.78rem;
+    letter-spacing:.5px;
+    font-family:inherit;
+    transition:.2s;
+  }
+  .lang-btn:hover{background:rgba(244,237,225,.12);}
+  .lang-btn.active{background:var(--gold); color:var(--navy-dark); border-color:var(--gold); font-weight:bold;}
+
+  /* Header / Hero */
+  header.hero{
+    position:relative;
+    background:linear-gradient(180deg, var(--navy-dark), #1c2431);
+    color:var(--white);
+    text-align:center;
+    padding:80px 20px 64px;
+    border-bottom:1px solid rgba(200,162,74,.35);
+  }
+  header.hero .sign{
+    display:inline-block;
+    border:1px solid var(--gold);
+    padding:16px 40px;
+  }
+  header.hero h1{
+    font-size:2.4rem;
+    color:var(--cream);
+    text-transform:uppercase;
+    letter-spacing:2px;
+  }
+  header.hero .tagline{
+    margin-top:10px;
+    font-style:italic;
+    color:var(--gold);
+    font-size:1rem;
+  }
+  header.hero .badge-row{
+    margin-top:26px;
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .badge{
+    background:rgba(244,237,225,.08);
+    border:1px solid rgba(244,237,225,.3);
+    padding:6px 16px;
+    border-radius:3px;
+    font-size:.82rem;
+  }
+  .badge.open{border-color:#5c8d63; color:#a9d2ae;}
+  .badge.closed{border-color:#a35a4c; color:#e0b0a6;}
+
+  /* Nav */
+  nav.mainnav{
+    background:var(--navy);
+    position:sticky; top:0; z-index:50;
+    border-bottom:1px solid rgba(200,162,74,.2);
+  }
+  nav.mainnav .container{
+    display:flex; justify-content:center; gap:28px; flex-wrap:wrap;
+    padding:12px 20px;
+  }
+  nav.mainnav a{
+    color:var(--cream);
+    text-decoration:none;
+    font-size:.85rem;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    padding:4px 2px;
+    border-bottom:2px solid transparent;
+    transition:.2s;
+  }
+  nav.mainnav a:hover{border-color:var(--gold); color:var(--gold);}
+
+  section{padding:60px 0;}
+  section h2{
+    text-align:center;
+    color:var(--navy);
+    font-size:1.75rem;
+    margin-bottom:8px;
+  }
+  .divider{
+    width:50px; height:2px; background:var(--terracotta);
+    margin:0 auto 34px;
+  }
+
+  /* About */
+  #about .about-grid{
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:44px; align-items:start;
+  }
+  #about p{margin-bottom:14px;}
+  .chalkboard{
+    background:var(--navy);
+    color:var(--cream);
+    border-radius:4px;
+    padding:26px 28px;
+  }
+  .chalkboard .cb-title{
+    color:var(--gold); font-size:.72rem; letter-spacing:2px; text-transform:uppercase;
+    margin-bottom:14px; border-bottom:1px solid rgba(244,237,225,.15); padding-bottom:10px;
+  }
+  .chalkboard ul{list-style:none; line-height:2; font-size:.92rem;}
+
+  /* Hours */
+  #hours{background:var(--navy); color:var(--cream);}
+  #hours h2{color:var(--cream);}
+  .hours-table{
+    max-width:520px; margin:0 auto;
+    background:rgba(244,237,225,.04);
+    border-radius:4px;
+    overflow:hidden;
+    border:1px solid rgba(244,237,225,.1);
+  }
+  .hours-row{
+    display:flex; justify-content:space-between;
+    padding:12px 22px;
+    border-bottom:1px solid rgba(244,237,225,.1);
+    font-size:.92rem;
+  }
+  .hours-row:last-child{border-bottom:none;}
+  .hours-row.today{background:rgba(200,162,74,.14); font-weight:bold; color:var(--gold);}
+
+  /* Menu — accordion */
+  #menu{background:var(--cream-2);}
+  .menu-intro{max-width:560px; margin:0 auto 30px; text-align:center; color:var(--stone); font-size:.92rem;}
+  .menu-accordion{max-width:680px; margin:0 auto;}
+  .menu-cat{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:4px;
+    margin-bottom:10px;
+    overflow:hidden;
+  }
+  .menu-cat-head{
+    width:100%;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:16px 20px;
+    background:none; border:none; cursor:pointer;
+    font-family:inherit; font-size:1rem; text-align:left;
+    color:var(--navy);
+  }
+  .menu-cat-head:hover{background:var(--cream-2);}
+  .menu-cat-head .count{font-size:.78rem; color:var(--stone); font-weight:normal; margin-left:10px;}
+  .menu-cat-head .chevron{
+    font-size:.8rem; color:var(--terracotta); transition:transform .2s;
+    border:1px solid var(--terracotta); width:22px; height:22px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .menu-cat.open .chevron{transform:rotate(45deg);}
+  .menu-cat-body{
+    max-height:0; overflow:hidden; transition:max-height .3s ease;
+    border-top:1px solid transparent;
+  }
+  .menu-cat.open .menu-cat-body{border-top:1px solid var(--line);}
+  .menu-cat-body ul{list-style:none; padding:6px 20px 16px;}
+  .menu-cat-body li{
+    display:flex; justify-content:space-between; gap:16px;
+    padding:9px 0;
+    border-bottom:1px dashed var(--line);
+    font-size:.92rem;
+  }
+  .menu-cat-body li:last-child{border-bottom:none;}
+  .menu-cat-body .dish-name{color:var(--text);}
+  .menu-cat-body .dish-price{color:var(--terracotta); font-weight:bold; white-space:nowrap;}
+  .menu-note{
+    text-align:center; font-size:.8rem; color:var(--stone); margin-top:18px; font-style:italic;
+  }
+  .burger-list{max-width:680px; margin:34px auto 0;}
+  .burger-list h3{
+    text-align:center; color:var(--navy); font-size:1.05rem; margin-bottom:16px; letter-spacing:.5px;
+  }
+  .burger-item{
+    background:var(--white); border:1px solid var(--line); border-radius:4px;
+    padding:14px 20px; margin-bottom:8px;
+    display:flex; justify-content:space-between; align-items:baseline; gap:16px;
+  }
+  .burger-item .b-name{font-weight:bold; color:var(--navy);}
+  .burger-item .b-desc{font-size:.85rem; color:var(--stone); flex:1; margin-left:14px;}
+
+  /* Reviews */
+  .reviews-grid{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:20px;
+  }
+  .review-card{
+    background:var(--white);
+    border-left:3px solid var(--gold);
+    padding:20px;
+    border-radius:3px;
+    border-top:1px solid var(--line); border-right:1px solid var(--line); border-bottom:1px solid var(--line);
+  }
+  .stars{color:var(--gold); margin-bottom:8px; letter-spacing:2px; font-size:.9rem;}
+  .review-card p.quote{font-style:italic; font-size:.9rem; margin-bottom:10px;}
+  .review-card .who{font-size:.78rem; color:var(--stone);}
+  .rating-summary{
+    text-align:center; margin-bottom:30px; font-size:1rem; color:var(--navy);
+  }
+  .rating-summary strong{font-size:1.5rem; color:var(--terracotta);}
+
+  /* Booking */
+  #booking{background:var(--navy);}
+  #booking h2{color:var(--cream);}
+  .booking-form{
+    max-width:560px; margin:0 auto;
+    background:var(--cream);
+    padding:34px;
+    border-radius:4px;
+  }
+  .form-row{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;}
+  .form-row.full{grid-template-columns:1fr;}
+  label{display:block; font-size:.8rem; margin-bottom:5px; color:var(--navy); font-weight:bold;}
+  input, select, textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid #cfc3aa;
+    border-radius:3px;
+    font-family:inherit;
+    font-size:.92rem;
+    background:var(--white);
+  }
+  textarea{resize:vertical; min-height:70px;}
+  .submit-btn{
+    width:100%;
+    background:var(--terracotta);
+    color:var(--white);
+    border:none;
+    padding:13px;
+    border-radius:3px;
+    font-size:.95rem;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:.2s;
+  }
+  .submit-btn:hover{background:#973f22;}
+  .form-note{
+    text-align:center; font-size:.76rem; color:var(--stone); margin-top:12px;
+  }
+  .confirm-msg{
+    display:none;
+    background:#e7f2e9; color:#2f5d38;
+    padding:12px; border-radius:3px; margin-bottom:16px; font-size:.86rem; text-align:center;
+  }
+
+  /* Contact */
+  #contact{background:var(--cream-2);}
+  .contact-grid{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:26px; text-align:center;
+  }
+  .contact-item h3{font-size:.85rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; color:var(--terracotta);}
+  .contact-item p, .contact-item a{font-size:.92rem; text-decoration:none; color:var(--text);}
+  .map-wrap{margin-top:34px; border-radius:4px; overflow:hidden; border:1px solid var(--line);}
+  .map-wrap iframe{width:100%; height:320px; border:0; display:block;}
+
+  footer{
+    background:var(--navy-dark);
+    color:rgba(244,237,225,.55);
+    text-align:center;
+    padding:30px 20px 20px;
+    font-size:.75rem;
+  }
+  footer .brand{color:var(--gold); font-weight:bold; margin-bottom:6px; font-size:.85rem; letter-spacing:.5px;}
+  footer .credit{font-size:.72rem; color:rgba(244,237,225,.35); margin-top:4px;}
+  footer .demo-note{
+    margin-top:14px;
+    padding-top:14px;
+    border-top:1px solid rgba(244,237,225,.15);
+    max-width:640px; margin-left:auto; margin-right:auto;
+    font-size:.68rem;
+    color:rgba(244,237,225,.4);
+  }
+
+  @media(max-width:700px){
+    #about .about-grid{grid-template-columns:1fr;}
+    header.hero h1{font-size:1.8rem;}
+    .form-row{grid-template-columns:1fr;}
+    nav.mainnav .container{gap:14px;}
+    .burger-item{flex-direction:column; align-items:flex-start; gap:4px;}
+    .burger-item .b-desc{margin-left:0;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="container">
+    <button class="lang-btn active" data-lang="es" onclick="setLang('es')">ES</button>
+    <button class="lang-btn" data-lang="ca" onclick="setLang('ca')">CA</button>
+    <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+  </div>
+</div>
+
+<nav class="mainnav">
+  <div class="container">
+    <a href="#about" data-i18n-es="Historia" data-i18n-ca="Història" data-i18n-en="Our Story">Historia</a>
+    <a href="#hours" data-i18n-es="Horario" data-i18n-ca="Horari" data-i18n-en="Hours">Horario</a>
+    <a href="#menu" data-i18n-es="Carta" data-i18n-ca="Carta" data-i18n-en="Menu">Carta</a>
+    <a href="#reviews" data-i18n-es="Reseñas" data-i18n-ca="Ressenyes" data-i18n-en="Reviews">Reseñas</a>
+    <a href="#booking" data-i18n-es="Reservar" data-i18n-ca="Reservar" data-i18n-en="Book a Table">Reservar</a>
+    <a href="#contact" data-i18n-es="Contacto" data-i18n-ca="Contacte" data-i18n-en="Contact">Contacto</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="sign">
+    <h1>El Rincón de Ilie</h1>
+    <div class="tagline" data-i18n-es="Vermut, tapas y pizarra a la entrada — Av. Mare de Déu de Montserrat, 173" data-i18n-ca="Vermut, tapes i pissarra a l'entrada — Av. Mare de Déu de Montserrat, 173" data-i18n-en="Vermouth, tapas and the chalkboard menu out front — Av. Mare de Déu de Montserrat, 173">Vermut, tapas y pizarra a la entrada — Av. Mare de Déu de Montserrat, 173</div>
+  </div>
+  <div class="badge-row">
+    <span class="badge" id="statusBadge">—</span>
+    <span class="badge">4.5 · 156 <span data-i18n-es="reseñas en Google" data-i18n-ca="ressenyes a Google" data-i18n-en="Google reviews">reseñas en Google</span></span>
+  </div>
+</header>
+
+<section id="about">
+  <div class="container about-grid">
+    <div>
+      <h2 data-i18n-es="Nuestra historia" data-i18n-ca="La nostra història" data-i18n-en="Our Story">Nuestra historia</h2>
+      <div class="divider" style="margin:0 0 20px;"></div>
+      <p data-i18n-es="La pizarra cambia según lo que haya en la barra ese día. A la entrada, dos caballetes anuncian las tapas y las hamburguesas de la casa; el resto se pide mirando a Ilie a los ojos." data-i18n-ca="La pissarra canvia segons el que hi hagi a la barra aquell dia. A l'entrada, dos cavallets anuncien les tapes i les hamburgueses de la casa; la resta es demana mirant a Ilie als ulls." data-i18n-en="The chalkboard changes with whatever's behind the bar that day. Out front, two easels list the tapas and the house burgers; everything else you order by talking to Ilie directly.">La pizarra cambia según lo que haya en la barra ese día. A la entrada, dos caballetes anuncian las tapas y las hamburguesas de la casa; el resto se pide mirando a Ilie a los ojos.</p>
+      <p data-i18n-es="Terraza en la acera, taburetes altos junto a la barra y un dueño que sigue sacando él mismo los platos. Nada de carta plastificada: aquí manda la pizarra." data-i18n-ca="Terrassa a la vorera, tamborets alts al costat de la barra i un propietari que encara treu ell mateix els plats. Res de carta plastificada: aquí mana la pissarra." data-i18n-en="Pavement terrace, tall stools by the bar, and an owner who still brings the plates out himself. No laminated menu here — the chalkboard is the boss.">Terraza en la acera, taburetes altos junto a la barra y un dueño que sigue sacando él mismo los platos. Nada de carta plastificada: aquí manda la pizarra.</p>
+    </div>
+    <div class="chalkboard">
+      <div class="cb-title" data-i18n-es="En la pizarra de hoy" data-i18n-ca="A la pissarra d'avui" data-i18n-en="On today's chalkboard">En la pizarra de hoy</div>
+      <ul>
+        <li>Jamón ibérico</li>
+        <li>Berenjena con miel</li>
+        <li>Pimientos del Padrón</li>
+        <li>Rabas · Calamares a la andaluza</li>
+        <li>Chipirones · Chocos</li>
+        <li>Lacón a la gallega</li>
+        <li>Croquetas variadas</li>
+        <li>Bravas · Crujipollo</li>
+        <li>Huevos estrellados</li>
+        <li>Alitas de pollo · Boquerones</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="hours">
+  <div class="container">
+    <h2 data-i18n-es="Horario" data-i18n-ca="Horari" data-i18n-en="Opening Hours">Horario</h2>
+    <div class="divider"></div>
+    <div class="hours-table" id="hoursTable"></div>
+  </div>
+</section>
+
+<section id="menu">
+  <div class="container">
+    <h2 data-i18n-es="Carta" data-i18n-ca="Carta" data-i18n-en="Menu">Carta</h2>
+    <div class="divider"></div>
+    <p class="menu-intro" data-i18n-es="Toca una categoría para ver los platos. La carta se basa en la pizarra y los caballetes de la entrada." data-i18n-ca="Toca una categoria per veure els plats. La carta es basa en la pissarra i els cavallets de l'entrada." data-i18n-en="Tap a category to see the dishes. The menu is based on the chalkboard and the easels at the entrance.">Toca una categoría para ver los platos. La carta se basa en la pizarra y los caballetes de la entrada.</p>
+
+    <div class="menu-accordion" id="menuAccordion"></div>
+
+    <div class="burger-list">
+      <h3 data-i18n-es="Hamburguesas de la casa" data-i18n-ca="Hamburgueses de la casa" data-i18n-en="House Burgers">Hamburguesas de la casa</h3>
+      <div class="burger-item">
+        <span class="b-name">Especial</span>
+        <span class="b-desc" data-i18n-es="Lechuga, tomate, cebolla, queso, huevo y bacon." data-i18n-ca="Enciam, tomàquet, ceba, formatge, ou i bacon." data-i18n-en="Lettuce, tomato, onion, cheese, egg and bacon.">Lechuga, tomate, cebolla, queso, huevo y bacon.</span>
+      </div>
+      <div class="burger-item">
+        <span class="b-name">Ilie</span>
+        <span class="b-desc" data-i18n-es="Lechuga, queso manchego, jamón ibérico y cebolla." data-i18n-ca="Enciam, formatge manxego, pernil ibèric i ceba." data-i18n-en="Lettuce, manchego cheese, Iberian ham and onion.">Lechuga, queso manchego, jamón ibérico y cebolla.</span>
+      </div>
+      <div class="burger-item">
+        <span class="b-name">Fabu</span>
+        <span class="b-desc" data-i18n-es="Queso brie, lechuga y mermelada de arándanos y bacon." data-i18n-ca="Formatge brie, enciam i melmelada de nabius i bacon." data-i18n-en="Brie cheese, lettuce, blueberry jam and bacon.">Queso brie, lechuga y mermelada de arándanos y bacon.</span>
+      </div>
+    </div>
+
+    <p class="menu-note" data-i18n-es="Precios sujetos a confirmación en barra — no publicados oficialmente por el establecimiento." data-i18n-ca="Preus subjectes a confirmació a la barra — no publicats oficialment per l'establiment." data-i18n-en="Prices subject to confirmation at the bar — not officially published by the venue.">Precios sujetos a confirmación en barra — no publicados oficialmente por el establecimiento.</p>
+  </div>
+</section>
+
+<section id="reviews">
+  <div class="container">
+    <h2 data-i18n-es="Lo que dicen nuestros clientes" data-i18n-ca="El que diuen els nostres clients" data-i18n-en="What Our Guests Say">Lo que dicen nuestros clientes</h2>
+    <div class="divider"></div>
+    <div class="rating-summary"><strong>4.5 / 5</strong> — 156 <span data-i18n-es="valoraciones en Google" data-i18n-ca="valoracions a Google" data-i18n-en="ratings on Google">valoraciones en Google</span></div>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote" data-i18n-es="“Amamos este lugar por la comida y por el ambiente familiar y relajado.”" data-i18n-ca="“Estimem aquest lloc per la menjar i per l'ambient familiar i relaxat.”" data-i18n-en="“We love this place for the food and the relaxed, family atmosphere.”">"Amamos este lugar por la comida y por el ambiente familiar y relajado."</p>
+        <div class="who">Google Reviews</div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote" data-i18n-es="“Mantiene el ambiente de los bares tradicionales… el dueño y su equipo son encantadores.”" data-i18n-ca="“Manté l'ambient dels bars tradicionals… el propietari i el seu equip són encantadors.”" data-i18n-en="“It keeps the feel of a traditional bar… the owner and his team are lovely.”">"Mantiene el ambiente de los bares tradicionales… el dueño y su equipo son encantadores."</p>
+        <div class="who">Google Reviews</div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p class="quote" data-i18n-es="“Llevo años desayunando, tomando un vermut y cenando aquí, y siempre todo muy bien.”" data-i18n-ca="“Fa anys que esmorzo, prenc un vermut i sopo aquí, i sempre tot molt bé.”" data-i18n-en="“I've been coming for breakfast, vermouth, and dinner for years — always great.”">"Llevo años desayunando, tomando un vermut y cenando aquí, y siempre todo muy bien."</p>
+        <div class="who">Google Reviews</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="booking">
+  <div class="container">
+    <h2 data-i18n-es="Reserva tu mesa" data-i18n-ca="Reserva la teva taula" data-i18n-en="Book Your Table">Reserva tu mesa</h2>
+    <div class="divider"></div>
+    <form class="booking-form" id="bookingForm" onsubmit="return handleBooking(event)">
+      <div class="confirm-msg" id="confirmMsg" data-i18n-es="¡Gracias! Tu solicitud de reserva se ha registrado (demo)." data-i18n-ca="Gràcies! La teva sol·licitud de reserva s'ha registrat (demo)." data-i18n-en="Thank you! Your reservation request has been recorded (demo).">¡Gracias! Tu solicitud de reserva se ha registrado (demo).</div>
+      <div class="form-row">
+        <div>
+          <label data-i18n-es="Nombre" data-i18n-ca="Nom" data-i18n-en="Name">Nombre</label>
+          <input type="text" required>
+        </div>
+        <div>
+          <label data-i18n-es="Teléfono" data-i18n-ca="Telèfon" data-i18n-en="Phone">Teléfono</label>
+          <input type="tel" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <label data-i18n-es="Fecha" data-i18n-ca="Data" data-i18n-en="Date">Fecha</label>
+          <input type="date" required>
+        </div>
+        <div>
+          <label data-i18n-es="Hora" data-i18n-ca="Hora" data-i18n-en="Time">Hora</label>
+          <input type="time" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <label data-i18n-es="Nº de personas" data-i18n-ca="Nº de persones" data-i18n-en="Guests">Nº de personas</label>
+          <input type="number" min="1" max="20" value="2" required>
+        </div>
+        <div>
+          <label data-i18n-es="Email (opcional)" data-i18n-ca="Email (opcional)" data-i18n-en="Email (optional)">Email (opcional)</label>
+          <input type="email">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div>
+          <label data-i18n-es="Notas (opcional)" data-i18n-ca="Notes (opcional)" data-i18n-en="Notes (optional)">Notas (opcional)</label>
+          <textarea placeholder="..."></textarea>
+        </div>
+      </div>
+      <button type="submit" class="submit-btn" data-i18n-es="Solicitar reserva" data-i18n-ca="Sol·licitar reserva" data-i18n-en="Request Booking">Solicitar reserva</button>
+      <p class="form-note" data-i18n-es="Esto es una demostración: la reserva no se envía a ningún sistema real. Para confirmar, llámanos por teléfono." data-i18n-ca="Això és una demostració: la reserva no s'envia a cap sistema real. Per confirmar, truca'ns per telèfon." data-i18n-en="This is a demo: the booking is not sent to any real system. To confirm, please call us.">Esto es una demostración: la reserva no se envía a ningún sistema real. Para confirmar, llámanos por teléfono.</p>
+    </form>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <h2 data-i18n-es="Visítanos" data-i18n-ca="Visita'ns" data-i18n-en="Find Us">Visítanos</h2>
+    <div class="divider"></div>
+    <div class="contact-grid">
+      <div class="contact-item">
+        <h3 data-i18n-es="Dirección" data-i18n-ca="Adreça" data-i18n-en="Address">Dirección</h3>
+        <p>Av. de la Mare de Déu de Montserrat, 173<br>Barcelona, España</p>
+      </div>
+      <div class="contact-item">
+        <h3 data-i18n-es="Teléfono" data-i18n-ca="Telèfon" data-i18n-en="Phone">Teléfono</h3>
+        <p><a href="tel:+34603281791">+34 603 28 17 91</a></p>
+      </div>
+      <div class="contact-item">
+        <h3>WhatsApp</h3>
+        <p><a href="https://wa.me/34603281791" target="_blank" rel="noopener">+34 603 28 17 91</a></p>
+      </div>
+    </div>
+    <div class="map-wrap">
+      <iframe src="https://www.google.com/maps?q=Av.+de+la+Mare+de+D%C3%A9u+de+Montserrat,+173,+Barcelona&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="brand">El Rincón de Ilie</div>
+  <div data-i18n-es="Av. de la Mare de Déu de Montserrat, 173 · Barcelona · +34 603 28 17 91" data-i18n-ca="Av. de la Mare de Déu de Montserrat, 173 · Barcelona · +34 603 28 17 91" data-i18n-en="Av. de la Mare de Déu de Montserrat, 173 · Barcelona · +34 603 28 17 91">Av. de la Mare de Déu de Montserrat, 173 · Barcelona · +34 603 28 17 91</div>
+  <div class="credit" data-i18n-es="Diseño web de demostración" data-i18n-ca="Disseny web de demostració" data-i18n-en="Demo web design">Diseño web de demostración</div>
+  <div class="demo-note" data-i18n-es="Aviso: esta página es una demostración creada con fines de presentación y no representa el sitio web oficial de El Rincón de Ilie. La información (horarios, reseñas, precios y formulario de reserva) se muestra a modo ilustrativo y el formulario no envía datos a ningún sistema real. Política de privacidad: no se recopila ni almacena ningún dato personal en este demo." data-i18n-ca="Avís: aquesta pàgina és una demostració creada amb finalitats de presentació i no representa el lloc web oficial d'El Rincón de Ilie. La informació (horaris, ressenyes, preus i formulari de reserva) es mostra a mode il·lustratiu i el formulari no envia dades a cap sistema real. Política de privacitat: no es recopila ni s'emmagatzema cap dada personal en aquest demo." data-i18n-en="Notice: this page is a demo created for presentation purposes and does not represent the official website of El Rincón de Ilie. The information (hours, reviews, prices and booking form) is shown for illustrative purposes only, and the form does not send data to any real system. Privacy policy: no personal data is collected or stored in this demo.">Aviso: esta página es una demostración creada con fines de presentación y no representa el sitio web oficial de El Rincón de Ilie. La información (horarios, reseñas, precios y formulario de reserva) se muestra a modo ilustrativo y el formulario no envía datos a ningún sistema real. Política de privacidad: no se recopila ni almacena ningún dato personal en este demo.</div>
+</footer>
+
+<script>
+  const translations = {
+    es: {
+      todayLabel: 'Hoy',
+      openNow: 'Abierto ahora',
+      closedNow: 'Cerrado ahora',
+      days: ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo']
+    },
+    ca: {
+      todayLabel: 'Avui',
+      openNow: 'Obert ara',
+      closedNow: 'Tancat ara',
+      days: ['Dilluns','Dimarts','Dimecres','Dijous','Divendres','Dissabte','Diumenge']
+    },
+    en: {
+      todayLabel: 'Today',
+      openNow: 'Open now',
+      closedNow: 'Closed now',
+      days: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
+    }
+  };
+
+  // hours: index 0=Mon ... 6=Sun. Each entry is array of [startHour,endHour] in 24h decimal, can span multiple ranges
+  const hoursData = [
+    [[8,16],[19,24]],   // Mon
+    [[8,16],[19,24]],   // Tue
+    [[8,16],[19,24]],   // Wed
+    [[8,16],[19,24]],   // Thu
+    [[8,16],[19,25]],   // Fri (until 1am)
+    [[9,17],[19,25]],   // Sat (until 1am)
+    [[9,17]]            // Sun
+  ];
+  const hoursDisplay = [
+    '08:00–16:00, 19:00–00:00',
+    '08:00–16:00, 19:00–00:00',
+    '08:00–16:00, 19:00–00:00',
+    '08:00–16:00, 19:00–00:00',
+    '08:00–16:00, 19:00–01:00',
+    '09:00–17:00, 19:00–01:00',
+    '09:00–17:00'
+  ];
+
+  // Menu built from the chalkboard/easel signage photographed at the entrance.
+  // No official price list is published, so prices are left as "—" rather than invented.
+  const menuData = [
+    {
+      es: 'Tapas y raciones', ca: 'Tapes i racions', en: 'Tapas & Small Plates',
+      items: [
+        { es:'Bravas', ca:'Braves', en:'Patatas bravas' },
+        { es:'Crujipollo', ca:'Crujipollo', en:'Crispy chicken bites' },
+        { es:'Huevos estrellados', ca:'Ous estrellats', en:'Broken eggs with potato' },
+        { es:'Alitas de pollo', ca:'Ales de pollastre', en:'Chicken wings' },
+        { es:'Delicias de morro', ca:'Delícies de morro', en:'Pork cheek "delicias"' },
+        { es:'Boquerones en vinagre', ca:'Seitons en vinagre', en:'Marinated anchovies' },
+        { es:'Croquetas variadas', ca:'Croquetes variades', en:'Assorted croquettes' }
+      ]
+    },
+    {
+      es: 'Del mar', ca: 'Del mar', en: 'From the Sea',
+      items: [
+        { es:'Rabas', ca:'Rabes', en:'Fried squid strips' },
+        { es:'Calamares a la andaluza', ca:'Calamars a l\'andalusa', en:'Andalusian-style calamari' },
+        { es:'Chipirones', ca:'Xipirons', en:'Baby squid' },
+        { es:'Chocos', ca:'Sépies', en:'Cuttlefish' }
+      ]
+    },
+    {
+      es: 'Ibéricos y embutidos', ca: 'Ibèrics i embotits', en: 'Cured Meats',
+      items: [
+        { es:'Jamón ibérico', ca:'Pernil ibèric', en:'Iberian ham' },
+        { es:'Lacón a la gallega', ca:'Lacón a la gallega', en:'Galician-style pork loin' }
+      ]
+    },
+    {
+      es: 'De la huerta', ca: 'De l\'hort', en: 'From the Garden',
+      items: [
+        { es:'Berenjena con miel', ca:'Albergínia amb mel', en:'Fried aubergine with honey' },
+        { es:'Pimientos del Padrón', ca:'Pebrots del Padrón', en:'Padrón peppers' }
+      ]
+    }
+  ];
+
+  let currentLang = 'es';
+
+  function buildMenu(){
+    const wrap = document.getElementById('menuAccordion');
+    wrap.innerHTML = '';
+    menuData.forEach((cat, idx)=>{
+      const catEl = document.createElement('div');
+      catEl.className = 'menu-cat';
+      const itemsHtml = cat.items.map(it=>`<li><span class="dish-name">${it[currentLang]}</span><span class="dish-price">—</span></li>`).join('');
+      catEl.innerHTML = `
+        <button class="menu-cat-head" type="button" data-idx="${idx}">
+          <span>${cat[currentLang]} <span class="count">(${cat.items.length})</span></span>
+          <span class="chevron">+</span>
+        </button>
+        <div class="menu-cat-body"><ul>${itemsHtml}</ul></div>
+      `;
+      wrap.appendChild(catEl);
+    });
+    wrap.querySelectorAll('.menu-cat-head').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const cat = btn.closest('.menu-cat');
+        const body = cat.querySelector('.menu-cat-body');
+        const isOpen = cat.classList.contains('open');
+        wrap.querySelectorAll('.menu-cat').forEach(c=>{
+          c.classList.remove('open');
+          c.querySelector('.menu-cat-body').style.maxHeight = null;
+        });
+        if(!isOpen){
+          cat.classList.add('open');
+          body.style.maxHeight = body.scrollHeight + 'px';
+        }
+      });
+    });
+  }
+
+  function setLang(lang){
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active', b.dataset.lang===lang));
+    document.querySelectorAll('[data-i18n-'+lang+']').forEach(el=>{
+      el.textContent = el.getAttribute('data-i18n-'+lang);
+    });
+    renderHours();
+    renderStatus();
+    buildMenu();
+  }
+
+  function renderHours(){
+    const t = translations[currentLang];
+    const now = new Date();
+    const todayIdx = (now.getDay()+6)%7; // Mon=0
+    const table = document.getElementById('hoursTable');
+    table.innerHTML = '';
+    t.days.forEach((day, i)=>{
+      const row = document.createElement('div');
+      row.className = 'hours-row' + (i===todayIdx ? ' today':'');
+      row.innerHTML = `<span>${day}${i===todayIdx ? ' ('+t.todayLabel+')':''}</span><span>${hoursDisplay[i]}</span>`;
+      table.appendChild(row);
+    });
+  }
+
+  function isOpenNow(){
+    const now = new Date();
+    const dayIdx = (now.getDay()+6)%7;
+    const hourDecimal = now.getHours() + now.getMinutes()/60;
+    const todayRanges = hoursData[dayIdx];
+    for(const [start,end] of todayRanges){
+      if(hourDecimal>=start && hourDecimal<Math.min(end,24)) return true;
+    }
+    const yestIdx = (dayIdx+6)%7;
+    for(const [start,end] of hoursData[yestIdx]){
+      if(end>24){
+        const spill = end-24;
+        if(hourDecimal < spill) return true;
+      }
+    }
+    return false;
+  }
+
+  function renderStatus(){
+    const t = translations[currentLang];
+    const badge = document.getElementById('statusBadge');
+    const open = isOpenNow();
+    badge.textContent = open ? t.openNow : t.closedNow;
+    badge.className = 'badge ' + (open ? 'open':'closed');
+  }
+
+  function handleBooking(e){
+    e.preventDefault();
+    document.getElementById('confirmMsg').style.display = 'block';
+    e.target.reset();
+    return false;
+  }
+
+  setLang('es');
+</script>
+
+</body>
+</html>
