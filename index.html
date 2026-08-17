@@ -152,27 +152,47 @@
   }
   .chalkboard ul{list-style:none; line-height:2; font-size:.92rem;}
 
-  /* Hours */
-  #hours{background:var(--navy); color:var(--cream);}
-  #hours h2{color:var(--cream);}
-  .hours-table{
-    max-width:520px; margin:0 auto;
-    background:rgba(244,237,225,.04);
+  /* Opening hours (collapsible widget, lives in the Find Us / contact section) */
+  .hours-toggle{
+    max-width:520px; margin:34px auto 0;
+    background:var(--white);
+    border:1px solid var(--line);
     border-radius:4px;
     overflow:hidden;
-    border:1px solid rgba(244,237,225,.1);
   }
+  .hours-toggle-head{
+    width:100%;
+    display:flex; justify-content:space-between; align-items:center; gap:12px;
+    padding:16px 20px;
+    background:none; border:none; cursor:pointer;
+    font-family:inherit; font-size:1rem; text-align:left;
+    color:var(--navy);
+  }
+  .hours-toggle-head:hover{background:var(--cream-2);}
+  .hours-toggle-head .cat-label{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .hours-toggle-head .status-inline{
+    font-size:.72rem; letter-spacing:.5px; text-transform:uppercase;
+    padding:3px 10px; border-radius:20px; border:1px solid var(--line); color:var(--stone);
+  }
+  .hours-toggle-head .status-inline.open{border-color:#5c8d63; color:#3d6b46;}
+  .hours-toggle-head .status-inline.closed{border-color:#a35a4c; color:#8a3a2c;}
+  .hours-toggle-body{max-height:0; overflow:hidden; transition:max-height .3s ease;}
+  .hours-toggle.open .hours-toggle-body{border-top:1px solid var(--line);}
+  .hours-toggle.open .chevron{transform:rotate(45deg);}
+
+  .hours-table{padding:6px 20px 18px;}
   .hours-row{
     display:flex; justify-content:space-between; align-items:baseline;
     flex-wrap:wrap; gap:4px 12px;
-    padding:12px 18px;
-    border-bottom:1px solid rgba(244,237,225,.1);
+    padding:9px 0;
+    border-bottom:1px dashed var(--line);
     font-size:.9rem;
   }
-  .hours-row .day{white-space:nowrap;}
-  .hours-row .time{white-space:normal; word-break:break-word; text-align:right; flex:1;}
+  .hours-row .day{white-space:nowrap; color:var(--text);}
+  .hours-row .time{white-space:normal; word-break:break-word; text-align:right; flex:1; color:var(--stone);}
   .hours-row:last-child{border-bottom:none;}
-  .hours-row.today{background:rgba(200,162,74,.14); font-weight:bold; color:var(--gold);}
+  .hours-row.today{color:var(--terracotta); font-weight:bold;}
+  .hours-row.today .time{color:var(--terracotta);}
 
   /* Menu — accordion */
   #menu{background:var(--cream-2);}
@@ -196,20 +216,22 @@
   .menu-cat-head:hover{background:var(--cream-2);}
   .menu-cat-head .cat-label{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;}
   .menu-cat-head .count{font-size:.78rem; color:var(--stone); font-weight:normal; margin-left:6px;}
-  .menu-cat-head .chevron{
+
+  /* Shared circular chevron toggle (menu accordion + hours widget) */
+  .chevron{
     position:relative;
     color:var(--terracotta); transition:transform .2s;
     border:1px solid var(--terracotta); width:24px; height:24px; border-radius:50%;
     flex-shrink:0;
   }
-  .menu-cat-head .chevron::before,
-  .menu-cat-head .chevron::after{
+  .chevron::before,
+  .chevron::after{
     content:''; position:absolute; top:50%; left:50%;
     background:var(--terracotta);
     transform:translate(-50%,-50%);
   }
-  .menu-cat-head .chevron::before{width:10px; height:2px;}
-  .menu-cat-head .chevron::after{width:2px; height:10px;}
+  .chevron::before{width:10px; height:2px;}
+  .chevron::after{width:2px; height:10px;}
   .menu-cat.open .chevron{transform:rotate(45deg);}
   .menu-cat-body{
     max-height:0; overflow:hidden; transition:max-height .3s ease;
@@ -384,7 +406,6 @@
 <nav class="mainnav">
   <div class="container">
     <a href="#about" data-i18n-es="Historia" data-i18n-ca="Història" data-i18n-en="Our Story">Historia</a>
-    <a href="#hours" data-i18n-es="Horario" data-i18n-ca="Horari" data-i18n-en="Hours">Horario</a>
     <a href="#menu" data-i18n-es="Carta" data-i18n-ca="Carta" data-i18n-en="Menu">Carta</a>
     <a href="#reviews" data-i18n-es="Reseñas" data-i18n-ca="Ressenyes" data-i18n-en="Reviews">Reseñas</a>
     <a href="#booking" data-i18n-es="Reservar" data-i18n-ca="Reservar" data-i18n-en="Book a Table">Reservar</a>
@@ -426,14 +447,6 @@
         <li>Alitas de pollo · Boquerones</li>
       </ul>
     </div>
-  </div>
-</section>
-
-<section id="hours">
-  <div class="container">
-    <h2 data-i18n-es="Horario" data-i18n-ca="Horari" data-i18n-en="Opening Hours">Horario</h2>
-    <div class="divider"></div>
-    <div class="hours-table" id="hoursTable"></div>
   </div>
 </section>
 
@@ -556,6 +569,20 @@
         <p><a href="https://wa.me/34603281791" target="_blank" rel="noopener">+34 603 28 17 91</a></p>
       </div>
     </div>
+
+    <div class="hours-toggle" id="hoursToggle">
+      <button class="hours-toggle-head" type="button" id="hoursToggleBtn">
+        <span class="cat-label">
+          <span data-i18n-es="Horario" data-i18n-ca="Horari" data-i18n-en="Opening Hours">Horario</span>
+          <span class="status-inline" id="statusInline"></span>
+        </span>
+        <span class="chevron" aria-hidden="true"></span>
+      </button>
+      <div class="hours-toggle-body" id="hoursToggleBody">
+        <div class="hours-table" id="hoursTable"></div>
+      </div>
+    </div>
+
     <div class="map-wrap">
       <iframe src="https://www.google.com/maps?q=Av.+de+la+Mare+de+D%C3%A9u+de+Montserrat,+173,+Barcelona&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
@@ -695,6 +722,12 @@
     renderHours();
     renderStatus();
     buildMenu();
+    initHoursToggle();
+    const widget = document.getElementById('hoursToggle');
+    if(widget && widget.classList.contains('open')){
+      const body = document.getElementById('hoursToggleBody');
+      body.style.maxHeight = body.scrollHeight + 'px';
+    }
   }
 
   function renderHours(){
@@ -731,10 +764,35 @@
 
   function renderStatus(){
     const t = translations[currentLang];
-    const badge = document.getElementById('statusBadge');
     const open = isOpenNow();
+
+    const badge = document.getElementById('statusBadge');
     badge.textContent = open ? t.openNow : t.closedNow;
     badge.className = 'badge ' + (open ? 'open':'closed');
+
+    const inline = document.getElementById('statusInline');
+    if(inline){
+      inline.textContent = open ? t.openNow : t.closedNow;
+      inline.className = 'status-inline ' + (open ? 'open':'closed');
+    }
+  }
+
+  function initHoursToggle(){
+    const widget = document.getElementById('hoursToggle');
+    const btn = document.getElementById('hoursToggleBtn');
+    const body = document.getElementById('hoursToggleBody');
+    if(!widget || widget.dataset.bound) return;
+    widget.dataset.bound = '1';
+    btn.addEventListener('click', ()=>{
+      const isOpen = widget.classList.contains('open');
+      if(isOpen){
+        widget.classList.remove('open');
+        body.style.maxHeight = null;
+      } else {
+        widget.classList.add('open');
+        body.style.maxHeight = body.scrollHeight + 'px';
+      }
+    });
   }
 
   function handleBooking(e){
