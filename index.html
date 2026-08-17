@@ -17,20 +17,23 @@
     --white:#fffdf9;
     --line:#e2d8c4;
   }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  html,body{overflow-x:hidden; width:100%;}
+  *{box-sizing:border-box;margin:0;padding:0; max-width:100%;}
+  html{overflow-x:hidden; width:100%;}
   body{
+    overflow-x:hidden;
+    width:100%;
     font-family:'Georgia', 'Times New Roman', serif;
     background:var(--cream);
     color:var(--text);
     line-height:1.6;
     word-wrap:break-word;
     overflow-wrap:break-word;
+    -webkit-text-size-adjust:100%;
   }
   h1,h2,h3{font-family:'Georgia', serif; letter-spacing:.3px;}
   a{color:inherit;}
   img{max-width:100%; display:block;}
-  .container{max-width:1000px; margin:0 auto; padding:0 20px;}
+  .container{width:100%; max-width:1000px; margin:0 auto; padding:0 16px;}
 
   /* Top bar / language switcher */
   .topbar{
@@ -160,11 +163,14 @@
     border:1px solid rgba(244,237,225,.1);
   }
   .hours-row{
-    display:flex; justify-content:space-between;
-    padding:12px 22px;
+    display:flex; justify-content:space-between; align-items:baseline;
+    flex-wrap:wrap; gap:4px 12px;
+    padding:12px 18px;
     border-bottom:1px solid rgba(244,237,225,.1);
-    font-size:.92rem;
+    font-size:.9rem;
   }
+  .hours-row .day{white-space:nowrap;}
+  .hours-row .time{white-space:normal; word-break:break-word; text-align:right; flex:1;}
   .hours-row:last-child{border-bottom:none;}
   .hours-row.today{background:rgba(200,162,74,.14); font-weight:bold; color:var(--gold);}
 
@@ -191,10 +197,19 @@
   .menu-cat-head .cat-label{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;}
   .menu-cat-head .count{font-size:.78rem; color:var(--stone); font-weight:normal; margin-left:6px;}
   .menu-cat-head .chevron{
-    font-size:.9rem; line-height:1; color:var(--terracotta); transition:transform .2s;
+    position:relative;
+    color:var(--terracotta); transition:transform .2s;
     border:1px solid var(--terracotta); width:24px; height:24px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    flex-shrink:0;
   }
+  .menu-cat-head .chevron::before,
+  .menu-cat-head .chevron::after{
+    content:''; position:absolute; top:50%; left:50%;
+    background:var(--terracotta);
+    transform:translate(-50%,-50%);
+  }
+  .menu-cat-head .chevron::before{width:10px; height:2px;}
+  .menu-cat-head .chevron::after{width:2px; height:10px;}
   .menu-cat.open .chevron{transform:rotate(45deg);}
   .menu-cat-body{
     max-height:0; overflow:hidden; transition:max-height .3s ease;
@@ -320,6 +335,15 @@
     color:rgba(244,237,225,.4);
   }
 
+  /* Mobile-first: base styles above already assume a phone-width layout
+     for anything that isn't otherwise constrained. The rules below scale
+     things UP for larger screens instead of squeezing DOWN for small ones. */
+  @media(min-width:701px){
+    #about .about-grid{grid-template-columns:1.1fr .9fr;}
+    .burger-item{flex-direction:row; align-items:baseline; gap:16px;}
+    .burger-item .b-desc{margin-left:14px;}
+  }
+
   @media(max-width:700px){
     #about .about-grid{grid-template-columns:1fr;}
     header.hero h1{font-size:1.8rem;}
@@ -327,6 +351,23 @@
     nav.mainnav .container{gap:14px;}
     .burger-item{flex-direction:column; align-items:flex-start; gap:4px;}
     .burger-item .b-desc{margin-left:0;}
+  }
+
+  @media(max-width:420px){
+    section{padding:44px 0;}
+    header.hero{padding:56px 16px 46px;}
+    header.hero .sign{padding:14px 18px;}
+    header.hero h1{font-size:1.45rem; letter-spacing:1px;}
+    header.hero .tagline{font-size:.85rem;}
+    section h2{font-size:1.4rem;}
+    .container{padding:0 14px;}
+    .booking-form{padding:22px 16px;}
+    .chalkboard{padding:20px 18px;}
+    .menu-cat-head{padding:14px 14px;}
+    .menu-cat-body ul{padding:6px 14px 14px;}
+    nav.mainnav .container{gap:10px 14px; padding:10px 14px;}
+    nav.mainnav a{font-size:.76rem;}
+    .badge{font-size:.74rem; padding:5px 12px;}
   }
 </style>
 </head>
@@ -561,13 +602,13 @@
     [[9,17]]            // Sun
   ];
   const hoursDisplay = [
-    '08:00–16:00, 19:00–00:00',
-    '08:00–16:00, 19:00–00:00',
-    '08:00–16:00, 19:00–00:00',
-    '08:00–16:00, 19:00–00:00',
-    '08:00–16:00, 19:00–01:00',
-    '09:00–17:00, 19:00–01:00',
-    '09:00–17:00'
+    '08:00-16:00, 19:00-00:00',
+    '08:00-16:00, 19:00-00:00',
+    '08:00-16:00, 19:00-00:00',
+    '08:00-16:00, 19:00-00:00',
+    '08:00-16:00, 19:00-01:00',
+    '09:00-17:00, 19:00-01:00',
+    '09:00-17:00'
   ];
 
   // Menu built from the chalkboard/easel signage photographed at the entrance.
@@ -622,7 +663,7 @@
       catEl.innerHTML = `
         <button class="menu-cat-head" type="button" data-idx="${idx}">
           <span class="cat-label">${cat[currentLang]}<span class="count">(${cat.items.length})</span></span>
-          <span class="chevron" aria-hidden="true">&#43;</span>
+          <span class="chevron" aria-hidden="true"></span>
         </button>
         <div class="menu-cat-body"><ul>${itemsHtml}</ul></div>
       `;
@@ -665,7 +706,7 @@
     t.days.forEach((day, i)=>{
       const row = document.createElement('div');
       row.className = 'hours-row' + (i===todayIdx ? ' today':'');
-      row.innerHTML = `<span>${day}${i===todayIdx ? ' ('+t.todayLabel+')':''}</span><span>${hoursDisplay[i]}</span>`;
+      row.innerHTML = `<span class="day">${day}${i===todayIdx ? ' ('+t.todayLabel+')':''}</span><span class="time">${hoursDisplay[i]}</span>`;
       table.appendChild(row);
     });
   }
