@@ -18,11 +18,14 @@
     --line:#e2d8c4;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{overflow-x:hidden; width:100%;}
   body{
     font-family:'Georgia', 'Times New Roman', serif;
     background:var(--cream);
     color:var(--text);
     line-height:1.6;
+    word-wrap:break-word;
+    overflow-wrap:break-word;
   }
   h1,h2,h3{font-family:'Georgia', serif; letter-spacing:.3px;}
   a{color:inherit;}
@@ -178,17 +181,18 @@
   }
   .menu-cat-head{
     width:100%;
-    display:flex; justify-content:space-between; align-items:center;
+    display:flex; justify-content:space-between; align-items:center; gap:12px;
     padding:16px 20px;
     background:none; border:none; cursor:pointer;
     font-family:inherit; font-size:1rem; text-align:left;
     color:var(--navy);
   }
   .menu-cat-head:hover{background:var(--cream-2);}
-  .menu-cat-head .count{font-size:.78rem; color:var(--stone); font-weight:normal; margin-left:10px;}
+  .menu-cat-head .cat-label{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;}
+  .menu-cat-head .count{font-size:.78rem; color:var(--stone); font-weight:normal; margin-left:6px;}
   .menu-cat-head .chevron{
-    font-size:.8rem; color:var(--terracotta); transition:transform .2s;
-    border:1px solid var(--terracotta); width:22px; height:22px; border-radius:50%;
+    font-size:.9rem; line-height:1; color:var(--terracotta); transition:transform .2s;
+    border:1px solid var(--terracotta); width:24px; height:24px; border-radius:50%;
     display:flex; align-items:center; justify-content:center; flex-shrink:0;
   }
   .menu-cat.open .chevron{transform:rotate(45deg);}
@@ -617,8 +621,8 @@
       const itemsHtml = cat.items.map(it=>`<li><span class="dish-name">${it[currentLang]}</span><span class="dish-price">—</span></li>`).join('');
       catEl.innerHTML = `
         <button class="menu-cat-head" type="button" data-idx="${idx}">
-          <span>${cat[currentLang]} <span class="count">(${cat.items.length})</span></span>
-          <span class="chevron">+</span>
+          <span class="cat-label">${cat[currentLang]}<span class="count">(${cat.items.length})</span></span>
+          <span class="chevron" aria-hidden="true">&#43;</span>
         </button>
         <div class="menu-cat-body"><ul>${itemsHtml}</ul></div>
       `;
